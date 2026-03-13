@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArtSam Admin ✦</title>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sage:       #C8D8C0;
+  --sage-light: #E4EEE0;
+  --sage-dark:  #7A9E6E;
+  --butter:     #F5EDCA;
+  --butter-dark:#D4B96A;
+  --lilac:      #D8C8E8;
+  --lilac-dark: #9A7DBB;
+  --blush:      #F2C9D0;
+  --blush-dark: #C0697A;
+  --cream:      #FDFAF4;
+  --ink:        #3D3226;
+  --ink-light:  #7A6A58;
+  --white:      #FFFFFF;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Quicksand', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: rgba(253,250,244,0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 2px dashed rgba(200,216,192,0.7);
+  padding: 18px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: 'Caveat', cursive;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.logo span { color: var(--lilac-dark); }
+.logo sub {
+  font-size: 0.7rem;
+  color: var(--ink-light);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+  margin-top: 1px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.user-pill {
+  background: var(--butter);
+  color: var(--butter-dark);
+  border-radius: 50px;
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-logout {
+  background: var(--blush);
+  color: var(--blush-dark);
+  border: none;
+  border-radius: 50px;
+  padding: 7px 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-logout:hover { background: var(--blush-dark); color: white; }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--cream);
+  padding: 20px;
+}
+.login-box {
+  background: white;
+  border-radius: 28px;
+  padding: 48px 40px;
+  max-width: 400px;
+  width: 100%;
+  border: 2px solid var(--sage-light);
+  box-shadow: 0 20px 60px rgba(61,50,38,0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.login-box h1 {
+  font-family: 'Caveat', cursive;
+  font-size: 2.2rem;
+  color: var(--ink);
+}
+.login-box p { font-size: 0.88rem; color: var(--ink-light); }
+.login-input {
+  width: 100%;
+  padding: 12px 18px;
+  border: 2px solid var(--sage-light);
+  border-radius: 50px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--lilac-dark); }
+.login-input::placeholder { color: var(--ink-light); }
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: var(--lilac-dark);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(154,125,187,0.35);
+}
+.btn-primary:hover { background: var(--ink); transform: translateY(-2px); }
+.login-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  background: white;
+  color: var(--ink);
+  border: 2px solid var(--sage-light);
+  border-radius: 50px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.login-google:hover { border-color: var(--lilac-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--sage-light); }
+.login-error { font-size:0.82rem; color: var(--blush-dark); font-weight:600; display:none; }
+.login-error.show { display:block; }
+
+/* ── MAIN APP ── */
+#app { display: none; padding: 36px 40px; max-width: 1100px; margin: 0 auto; }
+
+/* stats bar */
+.stats-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: white;
+  border: 2px solid var(--sage-light);
+  border-radius: 20px;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  box-shadow: 0 4px 16px rgba(61,50,38,0.06);
+}
+.stat-icon { font-size: 2rem; }
+.stat-label { font-size: 0.75rem; font-weight: 600; color: var(--ink-light); text-transform: uppercase; letter-spacing: 1px; }
+.stat-value { font-family: 'Caveat', cursive; font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1; }
+
+/* section title */
+.section-title {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── FORM CARD ── */
+.form-card {
+  background: white;
+  border-radius: 24px;
+  border: 2px solid var(--sage-light);
+  padding: 32px;
+  box-shadow: 0 6px 28px rgba(61,50,38,0.07);
+  margin-bottom: 36px;
+}
+.form-card h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  color: var(--ink);
+  margin-bottom: 22px;
+  padding-bottom: 14px;
+  border-bottom: 2px dashed var(--sage-light);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.form-input, .form-select, .form-textarea {
+  padding: 11px 16px;
+  border: 2px solid var(--sage-light);
+  border-radius: 14px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink);
+  outline: none;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--lilac-dark);
+  box-shadow: 0 0 0 3px rgba(154,125,187,0.12);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--ink-light); }
+.form-textarea { resize: vertical; min-height: 90px; border-radius: 14px; }
+.form-select { cursor: pointer; }
+
+/* color theme picker */
+.theme-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+.theme-opt {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.theme-opt:hover { transform: scale(1.15); }
+.theme-opt.selected { border-color: var(--ink); transform: scale(1.15); }
+
+/* details builder */
+.details-builder { display: flex; flex-direction: column; gap: 8px; }
+.detail-row { display: flex; gap: 8px; align-items: center; }
+.detail-input { flex: 1; }
+.btn-remove-detail {
+  background: var(--blush);
+  color: var(--blush-dark);
+  border: none;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-remove-detail:hover { background: var(--blush-dark); color: white; }
+.btn-add-detail {
+  background: var(--sage-light);
+  color: var(--sage-dark);
+  border: 2px dashed var(--sage-dark);
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+.btn-add-detail:hover { background: var(--sage-dark); color: white; }
+
+/* form actions */
+.form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 22px; }
+.btn-cancel {
+  padding: 12px 24px;
+  background: var(--sage-light);
+  color: var(--ink-light);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cancel:hover { background: var(--sage); }
+.btn-save {
+  padding: 12px 28px;
+  background: var(--sage-dark);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(122,158,110,0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-save:hover { background: var(--ink); transform: translateY(-2px); }
+.btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ── PRODUCTS GRID ── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.prod-card {
+  background: white;
+  border-radius: 22px;
+  border: 2px solid var(--sage-light);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(61,50,38,0.07);
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+}
+.prod-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(61,50,38,0.13); }
+.prod-card-top {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.5rem;
+  position: relative;
+}
+.prod-card-body { padding: 16px; flex: 1; }
+.prod-card-cat {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.prod-card-name {
+  font-family: 'Caveat', cursive;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.prod-card-price {
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  color: var(--ink);
+  font-weight: 700;
+}
+.prod-card-desc {
+  font-size: 0.78rem;
+  color: var(--ink-light);
+  margin-top: 6px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.prod-card-actions {
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid var(--sage-light);
+}
+.btn-edit {
+  flex: 1;
+  padding: 8px;
+  background: var(--butter);
+  color: var(--butter-dark);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-edit:hover { background: var(--butter-dark); color: white; }
+.btn-delete {
+  flex: 1;
+  padding: 8px;
+  background: var(--blush);
+  color: var(--blush-dark);
+  border: none;
+  border-radius: 10px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-delete:hover { background: var(--blush-dark); color: white; }
+
+/* empty state */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-light);
+}
+.empty-state-icon { font-size: 3.5rem; opacity: 0.4; margin-bottom: 12px; }
+.empty-state p { font-weight: 600; font-size: 0.9rem; }
+
+/* ── EXPORT SECTION ── */
+.export-card {
+  background: var(--lilac);
+  border: 2px dashed var(--lilac-dark);
+  border-radius: 24px;
+  padding: 28px 32px;
+  margin-bottom: 40px;
+}
+.export-card h3 {
+  font-family: 'Caveat', cursive;
+  font-size: 1.5rem;
+  color: var(--lilac-dark);
+  margin-bottom: 6px;
+}
+.export-card p { font-size: 0.85rem; color: var(--ink-light); margin-bottom: 16px; }
+.export-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-export {
+  padding: 11px 22px;
+  background: var(--lilac-dark);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 14px rgba(154,125,187,0.35);
+}
+.btn-export:hover { background: var(--ink); transform: translateY(-2px); }
+.btn-export-json {
+  padding: 11px 22px;
+  background: var(--butter);
+  color: var(--butter-dark);
+  border: none;
+  border-radius: 50px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-export-json:hover { background: var(--butter-dark); color: white; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--ink); color: var(--cream);
+  padding: 14px 28px; border-radius: 50px;
+  font-family: 'Caveat', cursive; font-size: 1.1rem; font-weight: 700;
+  z-index: 9998;
+  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2); white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── MODAL (confirm delete) ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(61,50,38,0.55);
+  backdrop-filter: blur(8px);
+  z-index: 9000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: var(--cream); border-radius: 24px;
+  padding: 36px 32px; max-width: 380px; width: 100%;
+  text-align: center;
+  border: 2px solid white;
+  box-shadow: 0 20px 60px rgba(61,50,38,0.2);
+  transform: scale(0.88); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.open .modal-box { transform: scale(1); }
+.modal-box h3 { font-family: 'Caveat', cursive; font-size: 1.8rem; color: var(--ink); margin-bottom: 10px; }
+.modal-box p { font-size: 0.88rem; color: var(--ink-light); margin-bottom: 24px; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+/* ── LOADING ── */
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px; font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ADD NEW BTN ── */
+.btn-new-product {
+  background: var(--sage-dark);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 11px 24px;
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(122,158,110,0.35);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-new-product:hover { background: var(--ink); transform: translateY(-2px); }
+
+/* tag de orden */
+.order-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: white;
+  border: 2px solid var(--sage-light);
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-light);
+}
+
+@media (max-width: 700px) {
+  #app { padding: 20px 18px; }
+  .header { padding: 14px 18px; }
+  .stats-bar { flex-wrap: wrap; }
+  .form-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 460px) {
+  .products-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <span style="font-size:2.8rem;">✦</span>
+    <h1>ArtSam Admin</h1>
+    <p>Panel de gestión de productos.<br>Inicia sesión con tu cuenta de ArtSam.</p>
+    <input class="login-input" id="loginEmail" type="email" placeholder="tu@correo.com">
+    <input class="login-input" id="loginPass" type="password" placeholder="Contraseña" onkeydown="if(event.key==='Enter') loginWithEmail()">
+    <p class="login-error" id="loginError"></p>
+    <button class="btn-primary" onclick="loginWithEmail()">Entrar al panel ✦</button>
+    <div class="divider">o</div>
+    <button class="login-google" onclick="loginWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continuar con Google
+    </button>
+  </div>
+</div>
+
+<!-- HEADER (hidden until logged in) -->
+<div class="header" id="mainHeader" style="display:none;">
+  <div class="logo">
+    Art<span>Sam</span>
+    <sub>panel de administración</sub>
+  </div>
+  <div class="header-right">
+    <div class="user-pill" id="userPill">👤 ...</div>
+    <button class="btn-logout" onclick="doLogout()">Salir →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-card">
+      <span class="stat-icon">📦</span>
+      <div>
+        <div class="stat-label">Productos</div>
+        <div class="stat-value" id="statTotal">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🧶</span>
+      <div>
+        <div class="stat-label">Categorías</div>
+        <div class="stat-value" id="statCats">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">💰</span>
+      <div>
+        <div class="stat-label">Precio más bajo</div>
+        <div class="stat-value" id="statMin">—</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✦</span>
+      <div>
+        <div class="stat-label">Última actualización</div>
+        <div class="stat-value" id="statDate" style="font-size:1rem; padding-top:4px;">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form para agregar / editar -->
+  <div class="form-card" id="formCard">
+    <h3 id="formTitle">➕ Agregar nuevo producto</h3>
+    <input type="hidden" id="editingId">
+
+    <div class="form-grid">
+      <!-- Emoji / icono -->
+      <div class="form-group">
+        <label class="form-label">Emoji del producto</label>
+        <input class="form-input" id="fEmoji" type="text" placeholder="🧶  (pega un emoji)">
+      </div>
+      <!-- Nombre corto -->
+      <div class="form-group">
+        <label class="form-label">Nombre corto (para miniaturas)</label>
+        <input class="form-input" id="fLabel" type="text" placeholder="Bolso tejido">
+      </div>
+      <!-- Título -->
+      <div class="form-group full">
+        <label class="form-label">Título del producto (puede tener salto de línea con \n)</label>
+        <input class="form-input" id="fTitle" type="text" placeholder="Bolso Tejido\nHecho a Mano">
+      </div>
+      <!-- Descripción -->
+      <div class="form-group full">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="fDesc" placeholder="Descripción breve del producto..."></textarea>
+      </div>
+      <!-- Precio -->
+      <div class="form-group">
+        <label class="form-label">Precio</label>
+        <input class="form-input" id="fPrice" type="text" placeholder="$8.000  o  Depende">
+      </div>
+      <!-- Categoría -->
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <input class="form-input" id="fCategory" type="text" placeholder="🧶 Crochet">
+      </div>
+      <!-- Estrellas -->
+      <div class="form-group">
+        <label class="form-label">Estrellas / íconos decorativos</label>
+        <input class="form-input" id="fStars" type="text" placeholder="💜💜💜💜💜">
+      </div>
+      <!-- Tema de color -->
+      <div class="form-group">
+        <label class="form-label">Tema de color</label>
+        <div class="theme-picker" id="themePicker">
+          <div class="theme-opt selected" data-theme="sage"   style="background:#C8D8C0;" title="Verde sage"></div>
+          <div class="theme-opt"          data-theme="blush"  style="background:#F2C9D0;" title="Rosado blush"></div>
+          <div class="theme-opt"          data-theme="butter" style="background:#F5EDCA;" title="Amarillo butter"></div>
+          <div class="theme-opt"          data-theme="lilac"  style="background:#D8C8E8;" title="Lila"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles del producto -->
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label" style="margin-bottom:8px;">Detalles del producto (lista)</label>
+      <div class="details-builder" id="detailsBuilder">
+        <div class="detail-row">
+          <input class="form-input detail-input" type="text" placeholder="Ej: Tejido a mano con algodón orgánico">
+          <button class="btn-remove-detail" onclick="removeDetail(this)">×</button>
+        </div>
+      </div>
+      <button class="btn-add-detail" onclick="addDetailRow()" style="margin-top:8px;">+ Agregar detalle</button>
+    </div>
+
+    <!-- Imágenes de ejemplo (URLs o nombres de archivo) -->
+    <div class="form-group" style="margin-bottom:4px;">
+      <label class="form-label">Imágenes de ejemplo</label>
+      <p style="font-size:0.75rem; color:var(--ink-light); margin-bottom:8px;">
+        Nombres de archivos locales (ej: <code>gato.png</code>) o emojis (ej: <code>🌙</code>). Separa con comas.
+      </p>
+      <input class="form-input" id="fExamples" type="text" placeholder="gato.png, ajolote.png, 🌙, ✨">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" id="btnCancel" onclick="cancelEdit()" style="display:none;">Cancelar</button>
+      <button class="btn-save" id="btnSave" onclick="saveProduct()">
+        <span id="btnSaveIcon">✦</span> <span id="btnSaveText">Guardar producto</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de productos -->
+  <div class="section-title">
+    Tus productos
+    <button class="btn-new-product" onclick="scrollToForm()">+ Nuevo producto</button>
+  </div>
+
+  <div class="products-grid" id="productsGrid">
+    <div class="loading">⏳</div>
+  </div>
+
+  <!-- Export -->
+  <div class="export-card">
+    <h3>📋 Exportar para la tienda</h3>
+    <p>Cuando termines de editar tus productos, genera el código actualizado y reemplázalo en tu <code>crochet.js</code>.</p>
+    <div class="export-actions">
+      <button class="btn-export" onclick="exportJS()">Copiar código JS ✦</button>
+      <button class="btn-export-json" onclick="exportJSON()">Descargar JSON 📥</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Modal confirmación eliminar -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <span style="font-size:2.5rem;">🗑️</span>
+    <h3>¿Eliminar producto?</h3>
+    <p id="deleteModalMsg">Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDeleteModal()">Cancelar</button>
+      <button class="btn-delete" id="confirmDeleteBtn" onclick="confirmDelete()">Sí, eliminar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ────────────────── FIREBASE ────────────────── */
+const firebaseConfig = {
+  apiKey: "AIzaSyAFKg0pEwCPf9nLQe4G8aAtZQ2kl4Zjo5w",
+  authDomain: "artsam-01.firebaseapp.com",
+  projectId: "artsam-01",
+  storageBucket: "artsam-01.firebasestorage.app",
+  messagingSenderId: "621063622555",
+  appId: "1:621063622555:web:0d400bfcd29d0d283d5b3e"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+/* ─── COLORES POR TEMA ─── */
+const THEMES = {
+  sage: {
+    bg: 'radial-gradient(circle, rgba(200,216,192,0.7) 0%, rgba(228,238,224,0.3) 80%, transparent 100%)',
+    exbg: 'var(--sage-light)',
+    pill: 'background:var(--sage-light); color:var(--sage-dark);',
+    btn:  'background:var(--sage-dark); color:white;',
+    cardBg: '#E4EEE0',
+    pillBg: '#E4EEE0', pillColor: '#7A9E6E'
+  },
+  blush: {
+    bg: 'radial-gradient(circle, rgba(242,201,208,0.7) 0%, rgba(253,221,230,0.3) 80%, transparent 100%)',
+    exbg: 'var(--blush)',
+    pill: 'background:var(--blush); color:var(--blush-dark);',
+    btn:  'background:var(--blush-dark); color:white;',
+    cardBg: '#F2C9D0', pillBg: '#F2C9D0', pillColor: '#C0697A'
+  },
+  butter: {
+    bg: 'radial-gradient(circle, rgba(245,237,202,0.7) 0%, rgba(250,245,220,0.3) 80%, transparent 100%)',
+    exbg: 'var(--butter)',
+    pill: 'background:var(--butter); color:var(--butter-dark);',
+    btn:  'background:var(--butter-dark); color:white;',
+    cardBg: '#F5EDCA', pillBg: '#F5EDCA', pillColor: '#D4B96A'
+  },
+  lilac: {
+    bg: 'radial-gradient(circle, rgba(216,200,232,0.7) 0%, rgba(240,232,248,0.3) 80%, transparent 100%)',
+    exbg: 'var(--lilac)',
+    pill: 'background:var(--lilac); color:var(--lilac-dark);',
+    btn:  'background:var(--lilac-dark); color:white;',
+    cardBg: '#D8C8E8', pillBg: '#D8C8E8', pillColor: '#9A7DBB'
+  }
+};
+
+/* ────────────────── AUTH ────────────────── */
+let currentUser = null;
+let pendingDeleteId = null;
+let allProducts = [];
+
+auth.onAuthStateChanged(user => {
+  if (user) {
+    if (user.email.toLowerCase() !== 'samiramirezgonzalez@gmail.com') {
+      auth.signOut();
+      showLoginError('No tienes permiso para acceder 🔒 (correo detectado: ' + user.email + ')');
+      return;
+    }
+    currentUser = user;
+    document.getElementById('loginScreen').style.display  = 'none';
+    document.getElementById('mainHeader').style.display   = 'flex';
+    document.getElementById('app').style.display          = 'block';
+    document.getElementById('userPill').textContent       = '👤 ' + (user.displayName || user.email.split('@')[0]);
+    loadProducts();
+  } else {
+    currentUser = null;
+    document.getElementById('loginScreen').style.display  = 'flex';
+    document.getElementById('mainHeader').style.display   = 'none';
+    document.getElementById('app').style.display          = 'none';
+  }
+});
+
+function loginWithEmail() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value.trim();
+  if (!email || !pass) { showLoginError('Completa todos los campos'); return; }
+  auth.signInWithEmailAndPassword(email, pass).catch(e => {
+    showLoginError('Correo o contraseña incorrectos');
+  });
+}
+
+function loginWithGoogle() {
+  auth.signInWithPopup(provider).catch(e => showLoginError('Error con Google: ' + e.message));
+}
+
+function doLogout() {
+  auth.signOut();
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+/* ────────────────── FIRESTORE ────────────────── */
+function loadProducts() {
+  db.collection('products').orderBy('order').onSnapshot(snap => {
+    allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderProducts();
+    updateStats();
+  }, err => {
+    // Si no hay índice de "order", cargar sin ordenar
+    db.collection('products').onSnapshot(snap2 => {
+      allProducts = snap2.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderProducts();
+      updateStats();
+    });
+  });
+}
+
+async function saveProduct() {
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true;
+  document.getElementById('btnSaveText').textContent = 'Guardando...';
+
+  const id       = document.getElementById('editingId').value;
+  const emoji    = document.getElementById('fEmoji').value.trim();
+  const label    = document.getElementById('fLabel').value.trim();
+  const title    = document.getElementById('fTitle').value.trim();
+  const desc     = document.getElementById('fDesc').value.trim();
+  const price    = document.getElementById('fPrice').value.trim();
+  const category = document.getElementById('fCategory').value.trim();
+  const stars    = document.getElementById('fStars').value.trim();
+  const theme    = document.querySelector('.theme-opt.selected')?.dataset.theme || 'sage';
+  const examplesRaw = document.getElementById('fExamples').value.trim();
+  const examples = examplesRaw ? examplesRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+  // Detalles
+  const details = Array.from(document.querySelectorAll('.detail-input'))
+    .map(i => i.value.trim()).filter(Boolean);
+
+  if (!emoji || !label || !title || !price || !category) {
+    showToast('⚠️ Completa los campos obligatorios');
+    btn.disabled = false;
+    document.getElementById('btnSaveText').textContent = id ? 'Actualizar producto' : 'Guardar producto';
+    return;
+  }
+
+  const t = THEMES[theme];
+  const data = {
+    emoji, label, title, desc, price, category, stars,
+    theme, details, examples,
+    bg: t.bg, exbg: t.exbg, pill: t.pill, btn: t.btn,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    if (id) {
+      await db.collection('products').doc(id).update(data);
+      showToast('✅ Producto actualizado');
+    } else {
+      data.order = allProducts.length;
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('products').add(data);
+      showToast('🎉 Producto agregado');
+    }
+    resetForm();
+  } catch(e) {
+    showToast('❌ Error: ' + e.message);
+  }
+
+  btn.disabled = false;
+  document.getElementById('btnSaveText').textContent = 'Guardar producto';
+}
+
+async function deleteProduct(id) {
+  await db.collection('products').doc(id).delete();
+  showToast('🗑️ Producto eliminado');
+}
+
+/* ────────────────── RENDER ────────────────── */
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  if (!allProducts.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <p>No tienes productos aún.<br>¡Agrega el primero usando el formulario de arriba!</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = allProducts.map((p, i) => {
+    const t = THEMES[p.theme || 'sage'];
+    return `
+      <div class="prod-card">
+        <div class="prod-card-top" style="background:${t.cardBg};">
+          <div class="order-badge">${i + 1}</div>
+          <span style="filter:drop-shadow(0 4px 10px rgba(0,0,0,0.12))">${p.emoji}</span>
+        </div>
+        <div class="prod-card-body">
+          <span class="prod-card-cat" style="background:${t.pillBg}; color:${t.pillColor};">${p.category}</span>
+          <div class="prod-card-name">${p.title.replace('\\n', ' ')}</div>
+          <div class="prod-card-price">${p.price}</div>
+          <div class="prod-card-desc">${p.desc || ''}</div>
+        </div>
+        <div class="prod-card-actions">
+          <button class="btn-edit" onclick="editProduct('${p.id}')">✏️ Editar</button>
+          <button class="btn-delete" onclick="askDelete('${p.id}','${p.label.replace(/'/g,"\\'")}')">🗑️ Eliminar</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allProducts.length;
+  const cats = new Set(allProducts.map(p => p.category));
+  document.getElementById('statCats').textContent = cats.size;
+  const prices = allProducts.map(p => parseInt(p.price.replace(/[^0-9]/g,''))).filter(Boolean);
+  document.getElementById('statMin').textContent = prices.length ? '$' + Math.min(...prices).toLocaleString('es-CL') : '—';
+  document.getElementById('statDate').textContent = new Date().toLocaleDateString('es-CL', { day:'2-digit', month:'short' });
+}
+
+/* ────────────────── FORM ────────────────── */
+function editProduct(id) {
+  const p = allProducts.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('editingId').value   = id;
+  document.getElementById('fEmoji').value      = p.emoji;
+  document.getElementById('fLabel').value      = p.label;
+  document.getElementById('fTitle').value      = p.title;
+  document.getElementById('fDesc').value       = p.desc || '';
+  document.getElementById('fPrice').value      = p.price;
+  document.getElementById('fCategory').value   = p.category;
+  document.getElementById('fStars').value      = p.stars || '';
+  document.getElementById('fExamples').value   = (p.examples || []).join(', ');
+
+  // tema
+  document.querySelectorAll('.theme-opt').forEach(o => o.classList.toggle('selected', o.dataset.theme === (p.theme || 'sage')));
+
+  // detalles
+  const builder = document.getElementById('detailsBuilder');
+  builder.innerHTML = '';
+  (p.details || ['']).forEach(d => {
+    addDetailRow(d);
+  });
+  if (!(p.details || []).length) addDetailRow();
+
+  document.getElementById('formTitle').textContent  = '✏️ Editando: ' + p.label;
+  document.getElementById('btnSaveText').textContent = 'Actualizar producto';
+  document.getElementById('btnCancel').style.display = 'inline-flex';
+
+  document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelEdit() {
+  resetForm();
+}
+
+function resetForm() {
+  document.getElementById('editingId').value = '';
+  ['fEmoji','fLabel','fTitle','fDesc','fPrice','fCategory','fStars','fExamples'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.querySelectorAll('.theme-opt').forEach((o, i) => o.classList.toggle('selected', i === 0));
+  const builder = document.getElementById('detailsBuilder');
+  builder.innerHTML = '';
+  addDetailRow();
+  document.getElementById('formTitle').textContent   = '➕ Agregar nuevo producto';
+  document.getElementById('btnSaveText').textContent  = 'Guardar producto';
+  document.getElementById('btnCancel').style.display  = 'none';
+}
+
+function addDetailRow(value = '') {
+  const builder = document.getElementById('detailsBuilder');
+  const row = document.createElement('div');
+  row.className = 'detail-row';
+  row.innerHTML = `
+    <input class="form-input detail-input" type="text" placeholder="Ej: Tejido a mano" value="${value}">
+    <button class="btn-remove-detail" onclick="removeDetail(this)">×</button>`;
+  builder.appendChild(row);
+}
+
+function removeDetail(btn) {
+  const builder = document.getElementById('detailsBuilder');
+  if (builder.children.length > 1) btn.parentElement.remove();
+}
+
+function scrollToForm() {
+  resetForm();
+  document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Theme picker
+document.querySelectorAll('.theme-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+
+/* ────────────────── DELETE MODAL ────────────────── */
+function askDelete(id, label) {
+  pendingDeleteId = id;
+  document.getElementById('deleteModalMsg').textContent = `¿Segura que quieres eliminar "${label}"?`;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+async function confirmDelete() {
+  if (!pendingDeleteId) return;
+  await deleteProduct(pendingDeleteId);
+  closeDeleteModal();
+}
+
+function closeDeleteModal() {
+  pendingDeleteId = null;
+  document.getElementById('deleteModal').classList.remove('open');
+}
+
+document.getElementById('deleteModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('deleteModal')) closeDeleteModal();
+});
+
+/* ────────────────── EXPORT ────────────────── */
+function exportJS() {
+  const jsArr = allProducts.map(p => {
+    const examples = (p.examples || []).map(e => `'${e}'`).join(',');
+    const details  = (p.details  || []).map(d => `      '${d.replace(/'/g, "\\'")}'`).join(',\n');
+    return `  {
+    emoji: '${p.emoji}', label: '${p.label}',
+    title: '${p.title}',
+    category: '${p.category}', price: '${p.price}', stars: '${p.stars || ''}',
+    desc: '${(p.desc||'').replace(/'/g,"\\'")}',
+    details: [
+${details}
+    ],
+    examples: [${examples}],
+    bg: '${p.bg}',
+    exbg: '${p.exbg}',
+    pill: '${p.pill}',
+    btn: '${p.btn}'
+  }`;
+  }).join(',\n');
+
+  const code = `const products = [\n${jsArr}\n];`;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('📋 ¡Código copiado al portapapeles!');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('📋 ¡Código copiado!');
+  });
+}
+
+function exportJSON() {
+  const data = allProducts.map(({ id, createdAt, updatedAt, ...rest }) => rest);
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = 'artsam-products.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('📥 JSON descargado');
+}
+
+/* ────────────────── UTILS ────────────────── */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Init: agregar primera fila de detalle
+addDetailRow();
+</script>
+</body>
+</html>
